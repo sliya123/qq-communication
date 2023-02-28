@@ -24,7 +24,7 @@ public class ClientConnectServerThread extends Thread {
     @Override
     public void run() {
         ObjectInputStream ois = null;
-        while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
             System.out.println("客户端线程, 等待读取从服务器发送的消息");
             try {
                 // 使用的是 tcp 协议 ，不需要像 udp协议 调用 send 和 receive

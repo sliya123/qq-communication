@@ -83,7 +83,7 @@ public class UserClientService {
     /**
      * 向服务器发送请求 -> 表示退出登陆，断开 socket 连接
      */
-    public void loginOut() {
+    public synchronized void loginOut() {
         try {
             // 发送一个 message ，类型是 MESSAGE_CLIENT_EXIT ,表示要向服务器退出
             Message message = new Message();
@@ -99,12 +99,15 @@ public class UserClientService {
             ObjectOutputStream oos =
                     new ObjectOutputStream(socket.getOutputStream());
             oos.writeObject(message);
+
+            clientConnectServerThread.interrupt();  // 关闭当前线程
+
             // 释放资源
-            // oos.close();
-            // socket.close(); // 关闭 socket通信
-            // clientConnectServerThread.interrupt();  // 关闭当前线程
+             oos.close();
+             socket.close(); // 关闭 socket通信
+
             System.out.println(user.getUserId() + " 退出系统");
-            System.exit(0);
+            // System.exit(0);
         } catch (IOException e) {
             e.printStackTrace();
         }
