@@ -31,7 +31,7 @@ public class ServerConnectCLientThread extends Thread {
             return;
         ObjectInputStream ois = null;
         ObjectOutputStream oos = null;
-        while (true) {        // 判断当前的用户是否退出了线程
+        while (!serverConnectCLientThread.isInterrupted()) {        // 判断当前的用户是否退出了线程
             try {
                 System.out.println("服务端 " + userId + " 和客户端保持通信，读取消息");
                 ois = new ObjectInputStream(socket.getInputStream());
@@ -60,7 +60,7 @@ public class ServerConnectCLientThread extends Thread {
                     // 释放资源
                     ois.close();
                     socket.close();
-                    // serverConnectCLientThread.interrupt(); // 关闭线程
+                    serverConnectCLientThread.interrupt(); // 关闭线程
                     // 退出与当前客户通信的线程
                     break;
                 }else{
